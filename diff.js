@@ -26,49 +26,33 @@ async function insertBefore(elements, target, anchor, parent) {
   elements = Array.from(elements)
   const targetIndex = elements.indexOf(target)
 
-  const animationLength = 1000
+  const animationLength = 100
   let anchorIndex = elements.indexOf(anchor)
   anchorIndex = anchorIndex === -1 ? elements.length : anchorIndex
   let columnWidth = elements[0].clientWidth + 20
   //   两种情况,target在前,或者在后
-  if (targetIndex < anchorIndex) {
-    for (let i = targetIndex + 1; i < anchorIndex; i++) {
-      elements[i].setAttribute(
-        'style',
-        `transform: translate(-${columnWidth}px, 0px);
+  let condition = targetIndex < anchorIndex ? -1 : 1
+  let length = condition === -1 ? anchorIndex : targetIndex
+  for (let i = condition === -1 ? targetIndex + 1 : anchorIndex; i < length; i++) {
+    debugger
+    elements[i].setAttribute(
+      'style',
+      `transform: translate(${columnWidth * condition}px, 0px);
                    background-color: palegoldenrod;
                    transition: background-color ${animationLength}ms, transform ${animationLength}ms`
-      )
-    }
-    elements[targetIndex].setAttribute(
-      'style',
-      `transform: translate(${columnWidth * (anchorIndex - targetIndex - 1)}px, 0px);
-                   transition: background-color ${animationLength}ms, transform ${animationLength}ms`
     )
-    await sleep(animationLength)
-    for (let i = targetIndex + 1; i < anchorIndex; i++) {
-      elements[i].removeAttribute('style')
-    }
-  } else {
-    for (let i = anchorIndex; i < targetIndex; i++) {
-      elements[i].setAttribute(
-        'style',
-        `transform: translate(${columnWidth}px, 0px);
-                     background-color: palegoldenrod;
-                     transition: background-color ${animationLength}ms, transform ${animationLength}ms`
-      )
-    }
-    debugger
-    elements[targetIndex].setAttribute(
-      'style',
-      `transform: translate(-${columnWidth * (targetIndex - anchorIndex)}px, 0px);
-                     transition: background-color ${animationLength}ms, transform ${animationLength}ms`
-    )
-    await sleep(animationLength)
-    for (let i = anchorIndex; i < targetIndex; i++) {
-      elements[i].removeAttribute('style')
-    }
   }
+  elements[targetIndex].setAttribute(
+    'style',
+    `transform: translate(${columnWidth * (condition === -1 ? anchorIndex - targetIndex - 1 : anchorIndex - targetIndex)}px, 0px);
+                   transition: background-color ${animationLength}ms, transform ${animationLength}ms`
+  )
+  await sleep(animationLength)
+  length = condition === -1 ? anchorIndex : targetIndex
+  for (let i = condition === -1 ? targetIndex + 1 : anchorIndex; i < length; i++) {
+    elements[i].removeAttribute('style')
+  }
+
   parent.insertBefore(target, anchor)
   elements[targetIndex].removeAttribute('style')
   await sleep(500)
@@ -79,37 +63,3 @@ async function insertBefore(elements, target, anchor, parent) {
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
-
-async function patchKeyedChildren(c1, c2, container) {
-  for (let i = 0; i < c2.length; i++) {
-    const next = c2[i]
-    next.classList.add('cur-number')
-    for (let j = 0; j < c1.length; j++) {
-      const prev = c1[j]
-      if (next.innerText === prev.innerText) {
-        debugger
-        const curAnchor =
-          i === 0
-            ? c1[0]
-            : // 因为每次移动后都会变更数组位置
-              Array.from(c1).find(el => {
-                if (el.innerText === c1[i - 1].nextSibling.innerText) {
-                  return true
-                }
-              })
-        await insertBefore(c1, prev, curAnchor, container)
-        break
-      }
-    }
-    next.classList.remove('cur-number')
-  }
-}
-
-// execution
-document.addEventListener('DOMContentLoaded', () => {
-  init()
-  renderNumbers(container1, numbers)
-  numbers.sort((a, b) => (Math.random() > 0.5 ? 1 : -1))
-  renderNumbers(container2, numbers)
-  patchKeyedChildren(container1.children, container2.children, container1)
-})

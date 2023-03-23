@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script defer src="./diff.js"></script>
+    <style>
+      .numbers {
+        display: flex;
+        column-gap: 20px;
+        flex-wrap: nowrap;
+      }
+      .number {
+        text-align: center;
+        width: 50px;
+        background-color: lightblue;
+        margin-top: 20px;
+      }
+      .inspected-number {
+        background-color: greenyellow;
+      }
+      .cur-number {
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="numbers" id="numbers-old"></div>
+    <div class="numbers" id="numbers-new"></div>
+    <script>
+      async function patchKeyedChildren(c1, c2, container) {
+        for (let i = 0; i < c2.length; i++) {
+          const next = c2[i]
+          next.classList.add('cur-number')
+          for (let j = 0; j < c1.length; j++) {
+            const prev = c1[j]
+            if (next.innerText === prev.innerText) {
+              const curAnchor =
+                i === 0
+                  ? c1[0]
+                  : // 因为每次移动后都会变更数组位置
+                    Array.from(c1).find((el, idx, array) => {
+                      if (el.innerText === array[i - 1].nextSibling.innerText) {
+                        return true
+                      }
+                    })
+              await insertBefore(c1, prev, curAnchor, container)
+              break
+            }
+          }
+          next.classList.remove('cur-number')
+        }
+      }
+
+      // execution
+      document.addEventListener('DOMContentLoaded', () => {
+        init()
+        renderNumbers(container1, numbers)
+        numbers.sort((a, b) => (Math.random() > 0.5 ? 1 : -1))
+        renderNumbers(container2, numbers)
+        patchKeyedChildren(container1.children, container2.children, container1)
+      })
+    </script>
+  </body>
+</html>
