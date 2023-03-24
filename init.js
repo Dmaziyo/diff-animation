@@ -1,7 +1,7 @@
 import { getRandom } from './utils.js'
 
-let numbers = []
-let numbers2 = []
+export let isRest = false
+export let isExecuting = false
 
 export let container1 = null
 export let container2 = null
@@ -11,11 +11,20 @@ export let container2 = null
     type:1           //c2元素比c1少  
     type:2           //c2元素比c1多  
  */
+
+export function setIsExecuting(val) {
+  isExecuting = val
+}
+
+export function setIsRest(val) {
+  isRest = val
+}
+
 export function init(type = 0) {
   let numberOfElements = 20
 
-  numbers.length = 0
-  numbers2.length = 0
+  let numbers = []
+  let numbers2 = []
   container1 = document.getElementById('numbers-old')
   container2 = document.getElementById('numbers-new')
 

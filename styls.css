@@ -16,6 +16,6 @@
   background-color: red;
 }
 .to-be-removed {
-  transition: all 1s;
+  transition: all 0.3s;
   background-color: pink;
 }

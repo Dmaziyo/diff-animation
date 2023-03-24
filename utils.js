@@ -13,11 +13,12 @@ export function getRandom(min, max) {
 }
 
 export async function insertBefore(elements, target, anchor, parent) {
-  await sleep(500)
   elements = Array.from(elements)
   const targetIndex = elements.indexOf(target)
   // avoid target was cleared when reset
-  if (targetIndex === -1) return
+  if (targetIndex === -1) {
+    return
+  }
 
   const animationLength = 2000
   let anchorIndex = elements.indexOf(anchor)
@@ -52,7 +53,9 @@ export async function insertBefore(elements, target, anchor, parent) {
   }
   // remove the animation
   elements[targetIndex].removeAttribute('style')
-  await sleep(500)
+
+  await sleep(transiLenth)
+  debugger
 }
 
 export async function tagAndRemove(node) {
@@ -60,6 +63,18 @@ export async function tagAndRemove(node) {
   await sleep(transiLenth)
   node.parentNode.removeChild(node)
   node.classList.remove('to-be-removed')
-  await sleep(transiLenth)
   return
+}
+
+export function debounce(fn) {
+  let timer = null
+  return function (...args) {
+    if (timer) {
+      clearTimeout(timer)
+      timer = null
+    }
+    timer = setTimeout(() => {
+      fn.apply(this, args)
+    }, 100)
+  }
 }
