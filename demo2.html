@@ -1,57 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- 只对顺序乱了，需要移动的节点才执行移动,c1 和 c2 只是顺序不同的情况 第二版 -->
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script defer src="./diff.js"></script>
-    <style>
-      .numbers {
-        display: flex;
-        column-gap: 20px;
-        flex-wrap: nowrap;
-      }
-      .number {
-        text-align: center;
-        width: 50px;
-        background-color: lightblue;
-        margin-top: 20px;
-      }
-      .inspected-number {
-        background-color: greenyellow;
-      }
-      .cur-number {
-        background-color: red;
-      }
-    </style>
+    <link rel="stylesheet" href="./styls.css" />
   </head>
   <body>
     <div class="numbers" id="numbers-old"></div>
     <div class="numbers" id="numbers-new"></div>
+    <div id="numbers"></div>
+    <label>Delay</label>
+    <select id="delay">
+      <option value="0">No delays</option>
+      <option value="100">0.1s</option>
+      <option value="200">0.2s</option>
+      <option value="300">0.3s</option>
+      <option value="400">0.4s</option>
+      <option value="500" selected>0.5s</option>
+      <option value="600">0.6s</option>
+      <option value="700">0.7s</option>
+      <option value="800">0.8s</option>
+      <option value="900">0.9s</option>
+      <option value="1000">1s</option>
+    </select>
+    <button id="swap">Go</button>
+    <button id="reset">reset</button>
     <script>
+      // param c1          old children
+      // param c2          new children
+      // param container   parent Node
       async function patchKeyedChildren(c1, c2, container) {
-        // for (let i = 0; i < c2.length; i++) {
-        //   const next = c2[i]
-        //   next.classList.add('cur-number')
-        //   for (let j = 0; j < c1.length; j++) {
-        //     const prev = c1[j]
-        //     if (next.innerText === prev.innerText) {
-        //       const curAnchor =
-        //         i === 0
-        //           ? c1[0]
-        //           : // 因为每次移动后都会变更数组位置
-        //             Array.from(c1).find(el => {
-        //               if (el.innerText === c1[i - 1].nextSibling.innerText) {
-        //                 return true
-        //               }
-        //             })
-        //       await insertBefore(c1, prev, curAnchor, container)
-        //       break
-        //     }
-        //   }
-        //   next.classList.remove('cur-number')
-        // }
         let maxNewIndexSoFar = 0
         for (let i = 0; i < c2.length; i++) {
           const next = c2[i]
@@ -60,11 +42,11 @@
           for (let j = 0; j < c1.length; j++) {
             const old = c1[j]
             if (next.innerText === old.innerText) {
+              // tag the inspected number
               old.classList.add('inspected-number')
 
               if (j < maxNewIndexSoFar) {
-                const prevInOld = Array.from(c1).find(el => {
-                  debugger
+                const prevInOld = Array.prototype.find.call(c1, el => {
                   if (el.innerText === c2[i - 1].innerText) {
                     return true
                   }
@@ -74,22 +56,22 @@
                 maxNewIndexSoFar = j
               }
               await sleep(1000)
-              old.classList.remove('inspected-number')
+              // old.classList.remove('inspected-number')
               break
             }
           }
           next.classList.remove('cur-number')
         }
       }
-
+      let type = 1
       // execution
-      document.addEventListener('DOMContentLoaded', () => {
-        init()
-        renderNumbers(container1, numbers)
-        numbers.sort((a, b) => (Math.random() > 0.5 ? 1 : -1))
-        renderNumbers(container2, numbers)
-        patchKeyedChildren(container1.children, container2.children, container1)
-      })
+      // document.addEventListener('DOMContentLoaded', () => {
+      //   init()
+      //   renderNumbers(container1, numbers)
+      //   numbers.sort((a, b) => (Math.random() > 0.5 ? 1 : -1))
+      //   renderNumbers(container2, numbers)
+      //   patchKeyedChildren(container1.children, container2.children, container1)
+      // })
     </script>
   </body>
 </html>

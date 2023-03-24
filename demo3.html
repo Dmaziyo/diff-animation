@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-  <!-- 只对顺序乱了，需要移动的节点才执行移动,c1 和 c2 只是顺序不同的情况 第二版本-->
   <head>
+    <!-- 当new节点中少了原有的节点, 第三版-->
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="./styls.css" />
     <script defer src="./diff.js"></script>
+    <link rel="stylesheet" href="./styls.css" />
   </head>
   <body>
     <div class="numbers" id="numbers-old"></div>
@@ -27,45 +27,70 @@
       <option value="900">0.9s</option>
       <option value="1000">1s</option>
     </select>
-    <button id="swap" onclick="swap()">Go</button>
-    <button id="reset" onclick="swap()">reset</button>
+    <button id="swap">Go</button>
+    <button id="reset">reset</button>
     <script>
       // param c1          old children
       // param c2          new children
       // param container   parent Node
+      const transiLenth = 1500
       async function patchKeyedChildren(c1, c2, container) {
+        let maxNewIndexSoFar = 0
+        let map = new Map()
+        //debugger
+        //  record the element of c1
+        for (let i = 0; i < c1.length; i++) {
+          map.set(c1[i].innerText, c1[i])
+        }
         for (let i = 0; i < c2.length; i++) {
           const next = c2[i]
+          //   tag the current number
           next.classList.add('cur-number')
           for (let j = 0; j < c1.length; j++) {
             const old = c1[j]
             if (next.innerText === old.innerText) {
+              // remove the node found from the map
+              //debugger
+              map.delete(next.innerText)
+
               old.classList.add('inspected-number')
-              const curAnchor =
-                i === 0
-                  ? c1[0]
-                  : // 遇到的问题: 因为每次移动后都会变更数组位置,需要存储动态位置
-                    Array.prototype.find.call(c1, (el, idx, array) => {
-                      if (el.innerText === array[i - 1].nextSibling.innerText) {
-                        return true
-                      }
-                    })
-              await insertBefore(c1, old, curAnchor, container)
+              if (j < maxNewIndexSoFar) {
+                //find the previous el in the c2 (new list)
+                const prevInOld = Array.prototype.find.call(c1, el => {
+                  if (el.innerText === c2[i - 1].innerText) {
+                    return true
+                  }
+                })
+
+                await insertBefore(c1, old, prevInOld.nextSibling, container)
+              } else {
+                maxNewIndexSoFar = j
+              }
+              await sleep(transiLenth)
+              //   old.classList.remove('inspected-number')
               break
             }
           }
+          //  delete tag
           next.classList.remove('cur-number')
         }
+        // convert the map to array,cause the forEach of map has a bug on it
+        let redundantNodes = Array.from(map, ([, val]) => val)
+        for (let node of redundantNodes) {
+          await tagAndRemove(node)
+        }
       }
-      let type = 0
+
       // execution
       // document.addEventListener('DOMContentLoaded', () => {
-      //   init()
+      //   // initiate the size of numbers
+      //   init(1)
       //   renderNumbers(container1, numbers)
-      //   numbers.sort((a, b) => (Math.random() > 0.5 ? 1 : -1))
-      //   renderNumbers(container2, numbers)
+      //   numbers2.sort((a, b) => (Math.random() > 0.5 ? 1 : -1))
+      //   renderNumbers(container2, numbers2)
       //   patchKeyedChildren(container1.children, container2.children, container1)
       // })
+      let type = 1
     </script>
   </body>
 </html>

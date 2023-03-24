@@ -1,0 +1,21 @@
+.numbers {
+  display: flex;
+  column-gap: 20px;
+  flex-wrap: nowrap;
+}
+.number {
+  text-align: center;
+  width: 50px;
+  background-color: lightblue;
+  margin-top: 20px;
+}
+.inspected-number {
+  background-color: greenyellow;
+}
+.cur-number {
+  background-color: red;
+}
+.to-be-removed {
+  transition: all 1s;
+  background-color: pink;
+}
