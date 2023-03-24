@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script defer src="./diff.js"></script>
+
     <link rel="stylesheet" href="./styls.css" />
   </head>
   <body>
@@ -29,20 +29,32 @@
     </select>
     <button id="swap">Go</button>
     <button id="reset">reset</button>
-    <script>
+    <script defer src="./init.js" type="module"></script>
+    <script type="module">
+      import { getRandom, sleep, insertBefore, tagAndRemove, setTransiLenth, transiLenth } from './utils.js'
+      import { container1, container2, init } from './init.js'
+      let type = 1
+      let isRest = false
+      let swapBtn = document.getElementById('swap')
+      let resetBtn = document.getElementById('reset')
       // param c1          old children
       // param c2          new children
       // param container   parent Node
-      const transiLenth = 1500
+      setTransiLenth(500)
       async function patchKeyedChildren(c1, c2, container) {
         let maxNewIndexSoFar = 0
         let map = new Map()
-        //debugger
         //  record the element of c1
         for (let i = 0; i < c1.length; i++) {
           map.set(c1[i].innerText, c1[i])
         }
         for (let i = 0; i < c2.length; i++) {
+          // if resetBtn was clicked ,break the for loop
+          if (isRest) {
+            isRest = false
+            return
+          }
+
           const next = c2[i]
           //   tag the current number
           next.classList.add('cur-number')
@@ -77,20 +89,24 @@
         // convert the map to array,cause the forEach of map has a bug on it
         let redundantNodes = Array.from(map, ([, val]) => val)
         for (let node of redundantNodes) {
+          // if resetBtn was clicked ,break the for loop
+          if (isRest) {
+            isRest = false
+            return
+          }
           await tagAndRemove(node)
         }
       }
+      swapBtn.addEventListener('click', () => {
+        patchKeyedChildren(container1.children, container2.children, container1)
+      })
 
-      // execution
-      // document.addEventListener('DOMContentLoaded', () => {
-      //   // initiate the size of numbers
-      //   init(1)
-      //   renderNumbers(container1, numbers)
-      //   numbers2.sort((a, b) => (Math.random() > 0.5 ? 1 : -1))
-      //   renderNumbers(container2, numbers2)
-      //   patchKeyedChildren(container1.children, container2.children, container1)
-      // })
-      let type = 1
+      resetBtn.addEventListener('click', () => {
+        isRest = true
+        init(type)
+      })
+      // initiate  DOMs
+      init(type)
     </script>
   </body>
 </html>

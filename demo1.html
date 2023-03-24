@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="./styls.css" />
-    <script defer src="./diff.js"></script>
   </head>
   <body>
     <div class="numbers" id="numbers-old"></div>
@@ -27,16 +26,30 @@
       <option value="900">0.9s</option>
       <option value="1000">1s</option>
     </select>
-    <button id="swap" onclick="swap()">Go</button>
-    <button id="reset" onclick="swap()">reset</button>
-    <script>
+    <button id="swap">Go</button>
+    <button id="reset">reset</button>
+    <script defer src="./init.js" type="module"></script>
+    <script defer type="module">
+      import { getRandom, sleep, insertBefore } from './utils.js'
+      import { container1, container2, init } from './init.js'
+      let type = 0
+      let isRest = false
+      let swapBtn = document.getElementById('swap')
+      let resetBtn = document.getElementById('reset')
       // param c1          old children
       // param c2          new children
       // param container   parent Node
       async function patchKeyedChildren(c1, c2, container) {
         for (let i = 0; i < c2.length; i++) {
+          // if resetBtn was clicked ,break the for loop
+          if (isRest) {
+            isRest = false
+            return
+          }
           const next = c2[i]
+
           next.classList.add('cur-number')
+
           for (let j = 0; j < c1.length; j++) {
             const old = c1[j]
             if (next.innerText === old.innerText) {
@@ -50,6 +63,7 @@
                         return true
                       }
                     })
+              await sleep(1000)
               await insertBefore(c1, old, curAnchor, container)
               break
             }
@@ -57,15 +71,17 @@
           next.classList.remove('cur-number')
         }
       }
-      let type = 0
-      // execution
-      // document.addEventListener('DOMContentLoaded', () => {
-      //   init()
-      //   renderNumbers(container1, numbers)
-      //   numbers.sort((a, b) => (Math.random() > 0.5 ? 1 : -1))
-      //   renderNumbers(container2, numbers)
-      //   patchKeyedChildren(container1.children, container2.children, container1)
-      // })
+
+      swapBtn.addEventListener('click', () => {
+        patchKeyedChildren(container1.children, container2.children, container1)
+      })
+
+      resetBtn.addEventListener('click', () => {
+        isRest = true
+        init(type)
+      })
+      // initiate  DOMs
+      init(type)
     </script>
   </body>
 </html>
