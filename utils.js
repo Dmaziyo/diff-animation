@@ -1,3 +1,4 @@
+import { isExecuting } from './init.js'
 export let transiLenth = 1000
 
 export function setTransiLenth(val) {
@@ -12,18 +13,56 @@ export function getRandom(min, max) {
   return Math.floor(Math.random() * (max - min) + min)
 }
 
+/**
+ *
+ * @param {*} elements
+ * @param {*} target
+ * @param {*} anchor
+ * @param {*} parent
+ * @returns
+ */
 export async function insertBefore(elements, target, anchor, parent) {
   elements = Array.from(elements)
   const targetIndex = elements.indexOf(target)
+  const animationLength = 1500
+  let columnWidth = elements[0].clientWidth + 20
+  let anchorIndex = elements.indexOf(anchor)
   // avoid target was cleared when reset
+
+  //
   if (targetIndex === -1) {
-    return
+    // add the new node to the real DOMS
+    if (isExecuting) {
+      if (anchor) {
+        debugger
+        for (let i = anchorIndex; i < elements.length; i++) {
+          elements[i].setAttribute(
+            'style',
+            `transform: translate(${columnWidth}px, 0px);
+                         background-color: palegoldenrod;
+                         transition: background-color ${animationLength}ms, transform ${animationLength}ms`
+          )
+        }
+        await sleep(animationLength)
+        for (let i = anchorIndex; i < elements.length; i++) {
+          elements[i].removeAttribute('style')
+        }
+      }
+
+      try {
+        parent.insertBefore(target, anchor)
+        if (anchor) await sleep(transiLenth)
+      } catch (error) {
+        console.log('reset')
+      }
+      return
+    } else {
+      return
+    }
   }
 
-  const animationLength = 2000
-  let anchorIndex = elements.indexOf(anchor)
   anchorIndex = anchorIndex === -1 ? elements.length : anchorIndex
-  let columnWidth = elements[0].clientWidth + 20
+
   //   两种情况,target在前,或者在后
   let condition = targetIndex < anchorIndex ? -1 : 1
   let length = condition === -1 ? anchorIndex : targetIndex
@@ -55,7 +94,6 @@ export async function insertBefore(elements, target, anchor, parent) {
   elements[targetIndex].removeAttribute('style')
 
   await sleep(transiLenth)
-  debugger
 }
 
 export async function tagAndRemove(node) {

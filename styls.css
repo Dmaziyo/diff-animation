@@ -13,9 +13,9 @@
   background-color: greenyellow;
 }
 .cur-number {
-  background-color: red;
+  background-color: pink;
 }
 .to-be-removed {
   transition: all 0.3s;
-  background-color: pink;
+  background-color: red;
 }

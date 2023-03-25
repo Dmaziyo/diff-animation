@@ -7,9 +7,10 @@ export let container1 = null
 export let container2 = null
 
 /**
-    type:0 default   //生成相同但顺序不同的  
-    type:1           //c2元素比c1少  
-    type:2           //c2元素比c1多  
+    type:0 default   //same size but different sequence  
+    type:1           //new.len < old.len
+    type:2           //new.len > old.len
+    type:3           //react diff  
  */
 
 export function setIsExecuting(val) {
@@ -25,6 +26,7 @@ export function init(type = 0) {
 
   let numbers = []
   let numbers2 = []
+  let set = new Set()
   container1 = document.getElementById('numbers-old')
   container2 = document.getElementById('numbers-new')
 
@@ -43,7 +45,6 @@ export function init(type = 0) {
         numbers.push(i)
       }
       numberOfElements = getRandom(1, getRandom(2, 19))
-      let set = new Set()
 
       while (!(set.size === numberOfElements)) {
         set.add(getRandom(1, 19))
@@ -55,7 +56,35 @@ export function init(type = 0) {
       renderNumbers(container2, numbers2)
       break
     case 2:
-      //  todo c2.length longer than c1.length
+      for (let i = 1; i <= numberOfElements; i++) {
+        numbers.push(i)
+      }
+      numberOfElements = getRandom(1, getRandom(2, 19))
+
+      while (!(set.size === numberOfElements)) {
+        set.add(getRandom(1, 30))
+      }
+
+      numbers2 = Array.from(set)
+      renderNumbers(container1, numbers2)
+      numbers2.sort((a, b) => (Math.random() > 0.5 ? 1 : -1))
+      renderNumbers(container2, numbers)
+      break
+    case 3:
+      numberOfElements = getRandom(1, getRandom(2, 19))
+      for (let i = 1; i <= numberOfElements; i++) {
+        numbers.push(i)
+      }
+      numberOfElements = getRandom(1, getRandom(2, 19))
+
+      while (!(set.size === numberOfElements)) {
+        set.add(getRandom(1, 30))
+      }
+
+      numbers2 = Array.from(set)
+      renderNumbers(container1, numbers2)
+      numbers2.sort((a, b) => (Math.random() > 0.5 ? 1 : -1))
+      renderNumbers(container2, numbers)
       break
   }
 }
