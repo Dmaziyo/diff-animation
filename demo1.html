@@ -9,13 +9,13 @@
     <link rel="stylesheet" href="./styls.css" />
   </head>
   <body>
-    <div id="header">
-      <div>case1:same elements but different sequence - bubble sort</div>
-      <div>case2:same elements but different sequence - another sort</div>
-      <div>case3:new children are less than old children</div>
-      <div>case4:new children are more than old children</div>
-      <div>case5:react diff</div>
-    </div>
+    <ul>
+      <li><a href="#/case1">case1:Same elements but different sequence - bubble sort</a></li>
+      <li><a href="#/case2">case2:Same elements but different sequence - another sort</a></li>
+      <li><a href="#/case3">case3:New children are less than old children</a></li>
+      <li><a href="#/case4">case4:New children are more than old children</a></li>
+      <li><a href="#/case5">case5:react diff</a></li>
+    </ul>
     <div class="numbers" id="numbers-old"></div>
     <div class="numbers" id="numbers-new"></div>
     <div id="numbers"></div>
@@ -34,14 +34,20 @@
     <script defer src="./init.js" type="module"></script>
     <script defer type="module">
       import { setTransiLenth, transiLenth, debounce } from './utils.js'
-      import { container1, container2, init, isRest, isExecuting, setIsExecuting, setIsRest } from './init.js'
+      import { container1, container2, init, isRest, isExecuting, setIsExecuting, setIsRest, patchKeyedChildren, type } from './init.js'
       import { patchKeyedChildren1, patchKeyedChildren2, patchKeyedChildren3, patchKeyedChildren4 } from './diff.js'
-      let type = 3
+      import { Router } from './router.js'
 
+      const router = new Router([
+        { path: '/case1', diff: patchKeyedChildren1, type: 0 },
+        { path: '/case2', diff: patchKeyedChildren2, type: 0 },
+        { path: '/case3', diff: patchKeyedChildren3, type: 1 },
+        { path: '/case4', diff: patchKeyedChildren4, type: 2 },
+        { path: '/case5', diff: patchKeyedChildren4, type: 3 }
+      ])
       let swapBtn = document.getElementById('swap')
       let resetBtn = document.getElementById('reset')
       let delayContainer = document.getElementById('delay')
-      let patchKeyedChildren = patchKeyedChildren4
 
       // param c1          old children
       // param c2          new children

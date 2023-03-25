@@ -5,13 +5,15 @@ export let isExecuting = false
 
 export let container1 = null
 export let container2 = null
+export let patchKeyedChildren = null
+export let type = 1
+export function setPatchKeyedChildren(val) {
+  patchKeyedChildren = val
+}
 
-/**
-    type:0 default   //same size but different sequence  
-    type:1           //new.len < old.len
-    type:2           //new.len > old.len
-    type:3           //react diff  
- */
+export function setType(val) {
+  type = val
+}
 
 export function setIsExecuting(val) {
   isExecuting = val
@@ -21,6 +23,12 @@ export function setIsRest(val) {
   isRest = val
 }
 
+/**
+    type:0 default   //same size but different sequence  
+    type:1           //new.len < old.len
+    type:2           //new.len > old.len
+    type:3           //react diff  
+ */
 export function init(type = 0) {
   let numberOfElements = 20
 
