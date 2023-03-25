@@ -1,7 +1,0 @@
-重写一个insertBefore(parent,div,curAnchor):
-	1.找到anchor的indexEnd,找到target的索引indexStart,
-	2.将位于(startIndex+1,endIndex-1)的所有元素往前移动一格
-	3.然后将target往后移End-start-1格
-	4.如果anchor为null,那么endIndex = length
-	5.真正的进行元素的移位insertBefore(div,curAnchor)
-	6.重新排列数组
