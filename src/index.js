@@ -2,7 +2,6 @@ import { setTransiLenth, transiLenth, debounce } from './utils.js'
 import { container1, container2, init, isRest, isExecuting, setIsExecuting, setIsRest, patchKeyedChildren, type } from './init.js'
 import { patchKeyedChildren1, patchKeyedChildren2, patchKeyedChildren3, patchKeyedChildren4 } from './diff.js'
 import { Router } from './router.js'
-import './styles/style.css'
 
 const router = new Router([
   { path: '/case1', diff: patchKeyedChildren1, type: 0 },

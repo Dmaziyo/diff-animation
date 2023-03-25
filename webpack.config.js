@@ -18,7 +18,7 @@ module.exports = {
   plugins: [
     new HtmlWebPackPlugin({
       title: 'diff-animation',
-      filename: 'demo.html',
+      filename: 'index.html',
       template: 'src/demo.html' //模板页面的路径，每次html时调用的模板
     })
   ],

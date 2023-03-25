@@ -232,15 +232,19 @@ export async function patchKeyedChildren4(c1, c2, container) {
       const clone = next.cloneNode(next)
       clone.classList.add('inspected-number')
       clone.classList.remove('cur-number')
-      let anchor =
-        i === 0
-          ? c1[0]
-          : Array.prototype.find.call(c1, el => {
-              if (el.innerText === c2[i - 1].innerText) {
-                return true
-              }
-            }).nextSibling
-      await insertBefore(c1, clone, anchor, container)
+      try {
+        let anchor =
+          i === 0
+            ? c1[0]
+            : Array.prototype.find.call(c1, el => {
+                if (el.innerText === c2[i - 1].innerText) {
+                  return true
+                }
+              }).nextSibling
+        await insertBefore(c1, clone, anchor, container)
+      } catch (error) {
+        console.log('reset')
+      }
     }
     //  delete tag
     next.classList.remove('cur-number')
