@@ -1,4 +1,5 @@
-import { setTransiLenth, transiLenth, debounce } from './utils.js'
+import './styles/style.css'
+import { setTransiLenth, debounce } from './utils.js'
 import { container1, container2, init, isRest, isExecuting, setIsExecuting, setIsRest, patchKeyedChildren, type } from './init.js'
 import { patchKeyedChildren1, patchKeyedChildren2, patchKeyedChildren3, patchKeyedChildren4 } from './diff.js'
 import { Router } from './router.js'
