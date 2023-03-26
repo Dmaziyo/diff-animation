@@ -1,4 +1,7 @@
 # dom-diffAnimation
-## in order to have a better understanding of the core diff of the react or vue<br>
-diffAnimation can visualize the process of dom diff   
-preview:https://dmaziyo.github.io/dom-diffAnimation/
+## Intro
+
+This project is used to describe the dynamic change process of diff, we can have a better understanding of the core differences between React and Vue
+
+## Preview
+https://dmaziyo.github.io/dom-diffAnimation/
