@@ -8,28 +8,36 @@
     <title>Document</title>
   </head>
   <body>
-    <ul>
-      <li><a href="#/case1">case1:Same elements but different sequence - bubble sort</a></li>
-      <li><a href="#/case2">case2:Same elements but different sequence - another sort</a></li>
-      <li><a href="#/case3">case3:New children are less than old children</a></li>
-      <li><a href="#/case4">case4:New children are more than old children</a></li>
-      <li><a href="#/case5">case5:react diff</a></li>
+
+    <!-- different cases -->
+    <ul class="case-line">
+      <li><a href="#/case1">case 1: Same elements but different sequence - bubble sort</a></li>
+      <li><a href="#/case2">case 2: Same elements but different sequence - another sort</a></li>
+      <li><a href="#/case3">case 3: New children are less than old children</a></li>
+      <li><a href="#/case4">case 4: New children are more than old children</a></li>
+      <li><a href="#/case5">case 5: React diff</a></li>
     </ul>
-    <div class="numbers" id="numbers-old"></div>
-    <div class="numbers" id="numbers-new"></div>
-    <div id="numbers"></div>
-    <label>Delay</label>
-    <select id="delay">
-      <option value="500" selected>0.5s</option>
 
-      <option value="1000">1s</option>
-      <option value="1500">1.5s</option>
+    <!-- dynamic node -->
+    <div class="node-box">
+      <div class="numbers" id="numbers-old"></div>
+      <div class="numbers" id="numbers-new"></div>
+      <div id="numbers"></div>
+    </div>
 
-      <option value="2000">2s</option>
-      <option value="2500">2.5s</option>
-    </select>
-    <button id="swap">Go</button>
-    <button id="reset">reset</button>
+    <!-- controller -->
+    <div class="controller">
+      <label>Switch delay time: </label>
+      <select id="delay" class="custom-font">
+        <option value="500" selected>0.5s</option>
+        <option value="1000">1s</option>
+        <option value="1500">1.5s</option>
+        <option value="2000">2s</option>
+        <option value="2500">2.5s</option>
+      </select>
+    <button id="swap" class="custom-font">Go</button>
+    <button id="reset" class="custom-font">Reset</button>
+    </div>
     <script type="module"></script>
   </body>
 </html>

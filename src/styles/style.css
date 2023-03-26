@@ -19,3 +19,21 @@
   transition: all 0.3s;
   background-color: red;
 }
+
+.case-line > li {
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+.node-box {
+  padding: 16px 0;
+}
+
+.controller {
+  margin: 16px 0;
+  font-size: 16px;
+}
+
+.custom-font {
+  font-size: 16px;
+}
